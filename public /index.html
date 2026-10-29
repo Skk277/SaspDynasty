@@ -1,0 +1,699 @@
+<!DOCTYPE html>
+<html lang="fr">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1, viewport-fit=cover">
+<title>Générateur de rapport SASP</title>
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700;800&display=swap" rel="stylesheet">
+<style>
+:root{--bg:#f4f6fb;--glow:#e3e0ff;--glow2:#d6f0ff;--card:rgba(255,255,255,.82);--tx:#0f172a;--mut:#64748b;--bd:#e5e9f2;--in:#fff;--ac:#2563eb;--ac2:#7c3aed;--acx:#fff;--sh:0 1px 2px rgba(15,23,42,.04),0 12px 32px rgba(37,99,235,.08);box-sizing:border-box;padding-top:env(safe-area-inset-top,0px);padding-bottom:env(safe-area-inset-bottom,0px);color-scheme:light}
+
+
+:root:not([data-theme="light"]){--bg:#070a14;--glow:#1d1b52;--glow2:#0c3556;--card:rgba(20,26,46,.72);--tx:#eef2ff;--mut:#8b97b8;--bd:#222c49;--in:#0d1326;--ac:#5b8cff;--ac2:#a06bff;--acx:#fff;--sh:0 1px 2px rgba(0,0,0,.4),0 16px 40px rgba(0,0,0,.45);color-scheme:dark}
+.top .sec{padding:8px 14px;font-size:16px;line-height:1}
+#dc{margin-left:auto;display:flex;align-items:center;gap:8px;flex-wrap:wrap;justify-content:flex-end}#dc button{padding:8px 14px;font-size:13px}#dcUser{font-size:12.5px;color:var(--mut);font-weight:500}
+*{box-sizing:border-box}
+body{margin:0;color:var(--tx);font:15px/1.5 "Inter",system-ui,-apple-system,"Segoe UI",Roboto,sans-serif;background:radial-gradient(700px 400px at 10% -100px,var(--glow),transparent),radial-gradient(600px 400px at 95% -80px,var(--glow2),transparent),var(--bg);min-height:100vh}
+.top{max-width:1000px;margin:0 auto;padding:22px 16px 0;display:flex;align-items:center;gap:14px}
+.badge{flex:none;width:52px;height:52px;border-radius:14px;display:grid;place-items:center;font-size:28px;background:linear-gradient(135deg,var(--ac2),var(--ac));box-shadow:var(--sh)}
+.top h1{font-size:26px;font-weight:800;margin:0;letter-spacing:-.02em;background:linear-gradient(90deg,var(--tx),var(--ac));-webkit-background-clip:text;background-clip:text;color:transparent}.top p{margin:2px 0 0;color:var(--mut);font-size:13px}
+.wrap{max-width:1000px;margin:0 auto;padding:16px;display:grid;gap:18px;grid-template-columns:1fr 1fr;align-items:start}
+@media(max-width:800px){.wrap{grid-template-columns:1fr}.prev{position:static!important}}
+.card{background:var(--card);backdrop-filter:blur(14px);border:1px solid var(--bd);border-radius:24px;padding:24px;box-shadow:var(--sh)}
+.prev{position:sticky;top:16px}
+h2{display:flex;align-items:center;gap:8px;font-size:11.5px;font-weight:700;letter-spacing:.14em;text-transform:uppercase;color:var(--mut);margin:26px 0 10px}
+h2:first-of-type{margin-top:0}
+h2::before{content:"";width:8px;height:8px;border-radius:50%;background:linear-gradient(135deg,var(--ac),var(--ac2))}
+label{display:block;font-size:12.5px;font-weight:500;color:var(--mut);margin:10px 0 4px}
+input,select,textarea{width:100%;padding:11px 14px;border:1px solid var(--bd);border-radius:12px;background:var(--in);color:var(--tx);font:inherit;transition:border-color .15s,box-shadow .15s}
+input:focus,select:focus,textarea:focus{outline:0;border-color:var(--ac);box-shadow:0 0 0 4px color-mix(in srgb,var(--ac) 16%,transparent)}
+input[type=number]{text-align:center;font-weight:600}
+.row{display:grid;grid-template-columns:1fr 1fr;gap:12px}.row3{display:grid;grid-template-columns:1fr 1fr 1fr;gap:12px}
+@media(max-width:420px){.row3{grid-template-columns:1fr 1fr}}
+.hide{display:none}
+body.locked .shell{display:none}
+.shell{max-width:1240px;margin:0 auto;padding:0 16px;display:grid;grid-template-columns:240px 1fr;gap:18px;align-items:start}
+.shell .wrap{max-width:none;margin:0;padding:16px 0}
+.side{position:sticky;top:16px;margin-top:16px;padding:16px;display:grid;gap:10px}
+.side>button{width:100%}
+.side h2{margin:6px 0 0!important}
+#tabs{display:grid;gap:6px;max-height:68vh;overflow:auto}
+.tab{display:flex;align-items:stretch;border:1px solid var(--bd);border-radius:14px;background:var(--in);overflow:hidden}
+.tab.on{border-color:var(--ac);box-shadow:0 0 0 3px color-mix(in srgb,var(--ac) 16%,transparent)}
+.tab .t{flex:1;min-width:0;text-align:left;background:none;color:var(--tx);box-shadow:none;border-radius:0;padding:9px 12px;font-size:13px}
+.tab .t:hover{transform:none}
+.tab .t b{display:block;overflow:hidden;text-overflow:ellipsis;white-space:nowrap}
+.tab .t span{color:var(--mut);font-size:11.5px;font-weight:500}
+.tab .x{background:none;color:var(--mut);box-shadow:none;border-radius:0;padding:0 12px}
+.tab .cnt{align-self:center;flex:none;min-width:20px;height:20px;padding:0 6px;margin-right:10px;border-radius:999px;background:#ef4444;color:#fff;font-size:12px;font-weight:700;line-height:20px;text-align:center;box-shadow:0 0 0 3px color-mix(in srgb,#ef4444 25%,transparent)}
+#empty{display:none;margin-top:16px;text-align:center;color:var(--mut)}
+body.noreport #empty{display:block}
+body.noreport .wrap{display:none}
+#modal{display:none;position:fixed;inset:0;background:rgba(0,0,0,.55);z-index:50;align-items:center;justify-content:center;padding:16px}
+#modal.on{display:flex}
+#modal .card{max-width:380px;width:100%}
+#matErr{color:#ef4444;font-size:12.5px;min-height:18px;margin:6px 0 0}
+@media(max-width:800px){.shell{grid-template-columns:1fr}.side{position:static}#tabs{display:flex;overflow-x:auto;max-height:none}.tab{flex:none;min-width:180px}}
+#lock{display:none;max-width:480px;margin:60px auto;padding:32px 24px;text-align:center}
+body.locked #lock{display:block}
+#lock .ic{font-size:44px}
+button{padding:10px 16px;border:0;border-radius:999px;background:linear-gradient(135deg,var(--ac),var(--ac2));color:var(--acx);font:inherit;font-weight:600;box-shadow:0 6px 16px rgba(37,99,235,.25);cursor:pointer;transition:transform .12s,filter .12s}
+button:hover{filter:brightness(1.08);transform:translateY(-1px)}button:active{transform:none}
+button.sec{background:transparent;color:var(--ac);border:1px solid var(--bd);box-shadow:none}
+.rec{display:grid;grid-template-columns:1fr 120px 38px;gap:8px;margin-bottom:8px}
+.rec button{padding:0}
+.pv{background:var(--in);color:var(--tx);border:1px solid var(--bd);border-radius:16px;padding:18px;font:12.5px/1.5 ui-monospace,Consolas,monospace;max-height:72vh;overflow:auto}
+.pv .ln{white-space:pre-wrap;overflow-wrap:anywhere;min-height:1.5em}
+.pv .ctr{text-align:center}
+.pv .sep{height:0;margin:5px 0;border-top:2px solid var(--bd)}
+.pv .sep.dbl{border-top:4px double var(--bd)}
+@media(max-width:800px){.pv{padding:14px 12px;font-size:12px}}
+pre{white-space:pre-wrap;word-break:break-word;background:var(--in);color:var(--tx);border:1px solid var(--bd);border-radius:16px;padding:18px;font:12.5px/1.5 ui-monospace,Consolas,monospace;margin:0;max-height:72vh;overflow:auto}
+.bar{display:flex;gap:8px;margin-bottom:12px;flex-wrap:wrap}
+
+.hide{display:none!important}
+.side{display:grid;gap:10px}
+body:not(.staff) .staffonly{display:none}
+#tks,#tabs{display:grid;gap:6px;overflow:auto}
+#tks{max-height:30vh}
+input:disabled,select:disabled,textarea:disabled{opacity:.75;cursor:not-allowed}
+input[readonly]{opacity:.75}
+#stat{padding:10px 14px;border-radius:12px;font-size:13px;margin-bottom:12px;border:1px solid var(--bd);background:var(--in)}
+#stat.ok{border-color:#16a34a}#stat.ko{border-color:#ef4444}#stat.wait{border-color:#f59e0b}
+#rv{margin-bottom:12px;padding:12px;border:1px dashed var(--bd);border-radius:14px}
+#notifs{position:fixed;top:calc(16px + env(safe-area-inset-top,0px));right:16px;display:grid;gap:8px;z-index:70;width:min(340px,calc(100vw - 32px))}
+.notif{display:grid;gap:2px;padding:12px 14px;border-radius:14px;background:var(--in);color:var(--tx);border:1px solid #f59e0b;box-shadow:0 10px 30px rgba(0,0,0,.35);cursor:pointer;font-size:13px}
+.notif b{font-size:13.5px}.notif span{color:var(--mut)}
+#toast{display:none;position:fixed;left:50%;bottom:calc(20px + env(safe-area-inset-bottom,0px));transform:translateX(-50%);background:var(--tx);color:var(--bg);padding:10px 16px;border-radius:999px;font-size:13px;font-weight:500;z-index:60;max-width:90vw;text-align:center}
+@media(max-width:800px){#tks{display:flex;overflow-x:auto;max-height:none}#tks .tab{flex:none;min-width:180px}}
+</style>
+</head>
+<body class="locked">
+<header class="top"><div class="badge">🚔</div><div><h1>Rapport de service SASP</h1><p>Remplis le formulaire, le rapport se génère en direct.</p></div><div id="dc"><span id="dcUser"></span><button type="button" id="dcBtn">Connexion Discord</button><button type="button" class="sec" id="theme" title="Thème">☀️</button></div></header>
+<div id="lock" class="card"><div class="ic">🔒</div><h2 style="justify-content:center;margin:12px 0 8px">Accès réservé</h2><p id="lockMsg" style="color:var(--mut);margin:0"></p></div>
+<div class="shell">
+<aside class="side card"><button type="button" id="newRep">+ Nouveau rapport</button>
+<div class="staffonly"><h2>Tickets</h2><div id="tks"></div></div>
+<h2 id="repTitle">Mes rapports</h2>
+<button type="button" class="sec staffonly" id="editMat">✏️ Matricule</button>
+<button type="button" class="sec staffonly" id="delTk">🗑️ Supprimer le ticket</button>
+<button type="button" class="sec staffonly" id="notifBtn">🔔 Activer les notifications</button>
+<div id="tabs"></div></aside>
+<main>
+<div id="empty" class="card"><span id="emptyTxt"></span></div>
+<div class="wrap">
+<div class="card form">
+  <div id="agentBox">
+  <h2>Agent</h2>
+  <div class="row">
+    <div><label>Mention Discord / nom</label><input id="agent" placeholder="&lt;@123456789&gt; ou ton nom"></div>
+    <div><label>Grade</label><select id="grade"><option>Chief</option><option>Assistant Chief</option><option>Commandant</option><option>Capitaine</option><option>Lieutenant Chef</option><option>Lieutenant</option><option>Sergent Chef</option><option>Sergent III</option><option>Sergent II</option><option>Sergent I</option><option>Senior Lead Officier</option><option>Officier III</option><option>Officier II</option><option selected>Officier I</option><option>Cadet</option><option>Rookie</option></select></div>
+  </div>
+  <div class="row">
+    <div><label>Date</label><input type="date" id="date"></div>
+    <div><label>N° de dossier</label><input type="number" id="num" min="1" value="1"></div>
+  </div>
+  <div class="row">
+    <div><label>Matricule (lié à ton ticket)</label><input id="matricule" inputmode="numeric" maxlength="10" readonly></div>
+    <div></div>
+  </div>
+  </div>
+
+  <h2>Service</h2>
+  <div class="row">
+    <div><label>Heure de début</label><input type="time" id="debut"></div>
+    <div><label>Heure de fin</label><input type="time" id="fin"></div>
+  </div>
+  <label>Pause prise&nbsp;?</label>
+  <select id="pause"><option value="non">Non</option><option value="oui">Oui</option></select>
+  <div id="pauseBox" class="row hide">
+    <div><label>Début de la pause</label><input type="time" id="pDebut"></div>
+    <div><label>Fin de la pause (reprise)</label><input type="time" id="pFin"></div>
+  </div>
+
+  <h2>Activité</h2>
+  <div class="row3">
+    <div><label>Courses-poursuites</label><input type="number" id="poursuites" min="0" value="0"></div>
+    <div><label>Supérettes</label><input type="number" id="superettes" min="0" value="0"></div>
+    <div><label>Braquages de banque</label><input type="number" id="banques" min="0" value="0"></div>
+  </div>
+
+  <h2>Bilan (optionnel)</h2>
+  <div class="row3">
+    <div><label>Argent sale ($)</label><input type="number" id="sale" min="0" value="0"></div>
+    <div><label>Amendes ($)</label><input type="number" id="amendes" min="0" value="0"></div>
+    <div><label>Dépôt coffre ($)</label><input type="number" id="coffre" min="0" value="0"></div>
+  </div>
+  <div class="row3">
+    <div><label>Armes</label><input type="number" id="armes" min="0" value="0"></div>
+    <div><label>Drogues</label><input type="number" id="drogues" min="0" value="0"></div>
+    <div><label>Objets illégaux</label><input type="number" id="objets" min="0" value="0"></div>
+  </div>
+
+  <h2>Recrutement</h2>
+  <label>Recrutements effectués&nbsp;?</label>
+  <select id="recrut"><option value="non">Non</option><option value="oui">Oui</option></select>
+  <div id="recBox" class="hide" style="margin-top:8px">
+    <div id="recList"></div>
+    <button type="button" class="sec" id="addRec">+ Ajouter une recrue</button>
+  </div>
+
+  <h2>Notes / incidents (optionnel)</h2>
+  <textarea id="notes" rows="4" placeholder="Un truc à ajouter ? (ex: prise d’otages, dispatch...)"></textarea>
+</div>
+
+<div class="card prev">
+  <div id="stat"></div>
+  <div id="rv" class="hide"><label style="margin-top:0">Commentaire (obligatoire en cas de refus)</label><input id="rvC" maxlength="500" placeholder="ex : il manque l’heure de reprise">
+    <div class="bar" style="margin:10px 0 0"><button type="button" id="rvOk">✅ Valider</button><button type="button" class="sec" id="rvKo">❌ Refuser</button></div></div>
+  <div class="bar"><button type="button" id="send">Envoyer le rapport</button><button type="button" id="copy" class="sec">Copier</button><button type="button" class="sec" id="reset">Réinitialiser</button><button type="button" class="sec" id="del">Supprimer</button></div>
+  <pre id="out" hidden></pre>
+  <div id="view" class="pv"></div>
+</div>
+</div>
+</main>
+</div>
+<div id="modal"><div class="card">
+  <h2 id="mTitle" style="margin-top:0">Ton matricule</h2>
+  <p id="mHelp" style="color:var(--mut);font-size:13px;margin:0 0 6px"></p>
+  <div id="newFields">
+    <label>Nom et prénom (RP)</label>
+    <input id="fname" maxlength="80" placeholder="ex : John Smith" autocomplete="off">
+    <label>UUID</label>
+    <input id="fuuid" maxlength="64" placeholder="ex : mfl971" autocomplete="off">
+  </div>
+  <div id="matBox"><label>Matricule (chiffres uniquement)</label>
+  <input id="mat" inputmode="numeric" maxlength="10" placeholder="ex : 1042" autocomplete="off"></div>
+  <p id="matErr"></p>
+  <div class="bar" style="margin:10px 0 0"><button type="button" id="matOk">Créer mon ticket</button><button type="button" class="sec" id="matNo">Annuler</button></div>
+</div></div>
+<div id="notifs"></div>
+<div id="toast"></div>
+
+<script>
+(function(){
+var $=function(i){return document.getElementById(i)};
+var L1="━".repeat(64),L2="═".repeat(64);
+var fields=["agent","grade","date","num","matricule","debut","fin","pause","pDebut","pFin","poursuites","superettes","banques","sale","amendes","coffre","armes","drogues","objets","recrut","notes"];
+
+function h(t){return t?t.replace(":","h"):"--h--"}
+function mins(t){var p=t.split(":");return parseInt(p[0],10)*60+parseInt(p[1],10)}
+function span(a,b){if(!a||!b)return null;var d=mins(b)-mins(a);if(d<0)d+=1440;return d}
+function fmt(m){return Math.floor(m/60)+"h"+String(m%60).padStart(2,"0")}
+function n(i){return parseInt($(i).value,10)||0}
+function money(v){return v.toLocaleString("fr-FR").replace(/\u202f|\u00a0/g," ")+" $"}
+function x(v,m){return v>0?(m?money(v):v):(m?"X $":"X")}
+function plural(v,s,p){return v+" "+(v>1?p:s)}
+function today(){var t=new Date();return t.getFullYear()+"-"+String(t.getMonth()+1).padStart(2,"0")+"-"+String(t.getDate()).padStart(2,"0")}
+function fr(d){var p=(d||"").split("-");return p.length===3?p[2]+"/"+p[1]+"/"+p[0].slice(2):"--"}
+
+var DEF={};fields.forEach(function(f){DEF[f]=$(f).value});
+
+/* ===== ÉTAT ===== */
+var SK="sasp-session";
+var S=null;            // {session, exp, me, ticket}
+var tickets=[];        // liste des tickets (staff)
+var viewing=null;      // user_id du ticket affiché
+var reports=[];        // rapports du ticket affiché
+var cur=null;          // rapport affiché (brouillon ou rapport serveur)
+var draft=null;        // brouillon local (pas encore envoyé)
+var editable=true, busy=false, curRef="", mmode="create";
+
+/* ===== OUTILS ===== */
+var ERR={non_connecte:"Tu n’es pas connecté.",session_expiree:"Session expirée, reconnecte-toi.",pas_sur_le_serveur:"Tu n’es pas sur le serveur Discord.",role_manquant:"Accès refusé : tu n’as pas le rôle San Andreas State Police.",token_refuse:"Discord a refusé la connexion, réessaie.",token_invalide:"Connexion Discord invalide, réessaie.",discord_indisponible:"Discord est indisponible, réessaie dans un instant.",nom_invalide:"Indique ton nom et ton prénom (ex : John Smith).",uuid_invalide:"UUID invalide (lettres, chiffres, - et _ uniquement).",matricule_invalide:"Le matricule doit contenir uniquement des chiffres (10 maximum).",matricule_utilise:"Ce matricule est déjà utilisé par un autre agent.",ticket_existe:"Tu as déjà un ticket.",pas_de_ticket:"Tu n’as pas encore de ticket.",rapport_invalide:"Rapport invalide ou trop long.",deja_valide:"Ce rapport est déjà validé : il ne peut plus être modifié.",interdit:"Action non autorisée.",introuvable:"Introuvable.",trop_de_requetes:"Trop de requêtes, patiente un instant.",pas_son_propre_rapport:"Tu ne peux pas valider ton propre rapport.",statut_invalide:"Statut invalide.",reseau:"Serveur injoignable."};
+function emsg(e){return ERR[e&&e.code]||"Erreur inattendue."}
+var tt;function toast(m){var t=$("toast");t.textContent=m;t.style.display="block";clearTimeout(tt);tt=setTimeout(function(){t.style.display="none"},4500)}
+function fail(e){toast(emsg(e))}
+function lock(msg){document.body.classList.add("locked");$("lockMsg").textContent=msg}
+function unlock(){document.body.classList.remove("locked")}
+
+function api(method,url,body){
+  var o={method:method,headers:{}};
+  if(S)o.headers.Authorization="Bearer "+S.session;
+  if(body!==undefined){o.headers["Content-Type"]="application/json";o.body=JSON.stringify(body)}
+  return fetch(url,o).then(function(r){
+    return r.json().catch(function(){return {}}).then(function(j){
+      if(!r.ok){
+        if(r.status===401&&S)endSession(ERR[j.error]||"Session expirée, reconnecte-toi.");
+        var e=new Error(j.error||"erreur");e.code=j.error||"erreur";e.status=r.status;throw e;
+      }
+      return j;
+    });
+  },function(){var e=new Error("reseau");e.code="reseau";throw e});
+}
+function persist(){try{sessionStorage.setItem(SK,JSON.stringify(S))}catch(e){}}
+function endSession(msg){
+  try{sessionStorage.removeItem(SK)}catch(e){}
+  S=null;cur=null;draft=null;reports=[];tickets=[];viewing=null;
+  closeModal();
+  document.body.classList.remove("staff");
+  $("dcUser").textContent="";$("dcBtn").textContent="Connexion Discord";
+  lock(msg||"Connecte-toi avec Discord pour accéder au site.");
+}
+function tk(uid){return uid===S.me.id?S.ticket:(tickets.filter(function(t){return t.user_id===uid})[0]||null)}
+function same(a,b){return a===b||(a&&b&&a.id!=null&&a.id===b.id)}
+
+/* ===== BROUILLON LOCAL ===== */
+function dk(){return "sasp-draft-"+S.me.id}
+function saveDraft(){try{localStorage.setItem(dk(),JSON.stringify(draft.data))}catch(e){}}
+function clearDraft(){try{localStorage.removeItem(dk())}catch(e){}}
+function loadDraft(){draft=null;try{var d=JSON.parse(localStorage.getItem(dk())||"null");if(d)draft={id:null,user_id:S.me.id,status:null,data:d}}catch(e){}}
+function snapshot(){var o={};fields.forEach(function(f){o[f]=$(f).value});o.rec=recrues();return o}
+
+/* ===== AFFICHAGE : LISTES ===== */
+var ICON={pending:"⏳",approved:"✅",rejected:"❌"};
+function tabBtn(box,on,title,sub,click,count){
+  var t=document.createElement("div");t.className="tab"+(on?" on":"");
+  var b=document.createElement("button");b.type="button";b.className="t";
+  var n1=document.createElement("b");n1.textContent=title;
+  var n2=document.createElement("span");n2.textContent=sub;
+  b.appendChild(n1);b.appendChild(n2);b.onclick=click;
+  t.appendChild(b);
+  if(count>0){var c=document.createElement("span");c.className="cnt";c.textContent=count;c.title=count+" rapport"+(count>1?"s":"")+" à valider";t.appendChild(c)}
+  box.appendChild(t);
+}
+function renderTabs(){
+  var box=$("tabs");box.innerHTML="";
+  var list=(viewing===S.me.id&&draft?[draft]:[]).concat(reports);
+  list.forEach(function(r){
+    var d=r.data||{};
+    if(r.id==null)tabBtn(box,same(r,cur),"📝 Brouillon",fr(d.date)+" · pas encore envoyé",function(){selectReport(r)});
+    else tabBtn(box,same(r,cur),r.ref||"Rapport",(ICON[r.status]||"")+" "+fr(d.date),function(){selectReport(r)});
+  });
+}
+function renderTickets(){
+  if(!S||!S.me.staff)return;
+  var box=$("tks");box.innerHTML="";
+  tickets.forEach(function(t){
+    tabBtn(box,t.user_id===viewing,t.name,(t.full_name?t.full_name+" · ":"")+"Mat. "+t.matricule+(t.uuid?" · UUID "+t.uuid:"")+" · "+(t.grade||"?")+" · "+t.pending+" en attente / "+t.total,function(){viewTicket(t.user_id)},t.user_id!==S.me.id?t.pending:0);
+  });
+}
+function paint(){
+  renderTabs();renderTickets();
+  var own=viewing===S.me.id,t=tk(viewing);
+  $("repTitle").textContent=own?"Mes rapports":"Rapports de "+(t?t.name:"?");
+  $("editMat").textContent="✏️ Matricule"+(t?" ("+t.matricule+")":"");
+  $("emptyTxt").textContent=own?"Aucun rapport pour le moment. Clique sur « + Nouveau rapport » pour commencer.":"Cet agent n’a encore envoyé aucun rapport.";
+}
+
+/* ===== CHARGEMENT ===== */
+function loadReports(uid){return api("GET","/api/tickets/"+encodeURIComponent(uid)+"/reports").then(function(j){reports=j.reports;viewing=uid})}
+function pendMap(list){var m={};list.forEach(function(t){if(S&&t.user_id!==S.me.id)m[t.user_id]=t.pending});return m}
+function loadTickets(){return api("GET","/api/tickets").then(function(j){tickets=j.tickets;lastPend=pendMap(tickets);renderTickets()})}
+
+/* ===== NOTIFICATIONS STAFF ===== */
+var lastPend={},greeted=false,pollT=null;
+function notify(title,msg,uid){
+  var box=$("notifs"),d=document.createElement("div");d.className="notif";
+  var b=document.createElement("b");b.textContent=title;
+  var sp=document.createElement("span");sp.textContent=msg;
+  d.appendChild(b);d.appendChild(sp);
+  d.onclick=function(){d.remove();if(uid)viewTicket(uid)};
+  box.appendChild(d);setTimeout(function(){d.remove()},12000);
+  if(window.Notification&&Notification.permission==="granted"&&document.hidden){try{new Notification(title,{body:msg})}catch(e){}}
+}
+function who(t){return (t.full_name||t.name)+" · Mat. "+t.matricule}
+function greetStaff(){
+  if(!S||!S.me.staff||greeted)return;greeted=true;
+  var n=0;tickets.forEach(function(t){
+    if(t.user_id!==S.me.id&&t.pending>0){
+      n+=t.pending;
+      notify("📋 Rapport à valider",who(t)+" — "+t.pending+" en attente.",t.user_id);
+    }
+  });
+}
+/* ===== ACTUALISATION AUTOMATIQUE =====
+   Tout le monde (agents + staff) : les rapports affichés et leur statut se mettent à jour tout seuls.
+   Staff : la liste des tickets, les pastilles rouges et les notifications aussi. */
+var POLL_MS=8000,refreshing=false,pausedUntil=0;
+function sig(r){return JSON.stringify([r.status,r.reviewer,r.comment,r.data])}
+function sigStatus(r){return JSON.stringify([r.status,r.reviewer,r.comment])}
+function refresh(){
+  if(!S||busy||refreshing||document.hidden||Date.now()<pausedUntil||!S.ticket||!viewing)return;
+  refreshing=true;
+  var uid=viewing,staff=!!S.me.staff,ps=[api("GET","/api/tickets/"+encodeURIComponent(uid)+"/reports")];
+  if(staff)ps.push(api("GET","/api/tickets"));
+  Promise.all(ps).then(function(res){
+    if(!S||busy||viewing!==uid)return;
+    // --- tickets (staff) : pastilles + notifications ---
+    if(staff&&res[1]){
+      var j=res[1],prev=lastPend,now=pendMap(j.tickets);
+      if(greeted)j.tickets.forEach(function(t){
+        if(t.user_id!==S.me.id&&t.pending>(prev[t.user_id]||0))notify("📨 Nouveau rapport",who(t)+" a envoyé un rapport à valider.",t.user_id);
+      });
+      tickets=j.tickets;lastPend=now;
+    }
+    // --- rapports affichés ---
+    var list=res[0].reports,own=uid===S.me.id,nr=null;
+    if(cur&&cur.id!=null)nr=list.filter(function(q){return q.id===cur.id})[0]||null;
+    var gone=cur&&cur.id!=null&&!nr,old=cur;
+    reports=list;
+    if(gone){toast("Ce rapport n’existe plus.");showFirst(false);return}
+    if(nr){
+      if(own){
+        // on garde ce que l'agent est en train de taper ; on ne met à jour que le statut
+        if(sigStatus(nr)!==sigStatus(old)){
+          old.status=nr.status;old.reviewer=nr.reviewer;old.comment=nr.comment;
+          reports[reports.indexOf(nr)]=old;
+          setMode();
+          toast(nr.status==="approved"?"✅ Ton rapport a été validé":nr.status==="rejected"?"❌ Ton rapport a été refusé":"Statut du rapport mis à jour");
+        }else reports[reports.indexOf(nr)]=old;
+      }else if(sig(nr)!==sig(old)){
+        selectReport(nr); // un agent a modifié/renvoyé son rapport : on recharge l'affichage
+      }
+    }else if(!cur&&list.length&&!(own&&draft)){showFirst(false);return}
+    paint();
+  }).catch(function(e){if(e&&e.status===429)pausedUntil=Date.now()+30000}).then(function(){refreshing=false});
+}
+document.addEventListener("visibilitychange",function(){if(!document.hidden)refresh()});
+window.addEventListener("focus",refresh);
+function notifBtn(){
+  var b=$("notifBtn"),ok=window.Notification;
+  b.classList.toggle("hide",!ok||Notification.permission!=="default");
+}
+$("notifBtn").onclick=function(){if(window.Notification)Notification.requestPermission().then(notifBtn)};
+function viewTicket(uid){loadReports(uid).then(function(){showFirst(false)}).catch(fail)}
+function showFirst(auto){
+  var own=viewing===S.me.id,r=(own&&draft)?draft:reports[0];
+  if(r)selectReport(r);
+  else if(own&&auto)newReport();
+  else{cur=null;document.body.classList.add("noreport");paint()}
+}
+
+/* ===== RAPPORT AFFICHÉ ===== */
+function selectReport(r){
+  cur=null;
+  var own=r.user_id===S.me.id;
+  fields.forEach(function(f){$(f).value=r.data[f]!==undefined?r.data[f]:DEF[f]});
+  if(own&&S.ticket)$("matricule").value=S.ticket.matricule;
+  if(own&&S.me.grade)$("grade").value=S.me.grade;
+  if(!own){
+    // Rapport d'un autre agent : on affiche son pseudo (pas la mention <@id>) et son matricule à jour
+    var tt=tk(r.user_id);
+    if(tt){
+      $("agent").value=tt.name;
+      $("matricule").value=tt.matricule;
+      if(tt.grade)$("grade").value=tt.grade;
+    }
+  }
+  $("recList").innerHTML="";(r.data.rec||[]).forEach(function(q){addRec(q.n,q.t)});
+  if($("recrut").value==="oui"&&!document.querySelector("#recList .rec"))addRec();
+  cur=r;
+  document.body.classList.remove("noreport");
+  setMode();render();paint();
+}
+function setMode(){
+  var own=cur.user_id===S.me.id,isNew=cur.id==null;
+  editable=own&&cur.status!=="approved";
+  document.querySelectorAll(".form input,.form select,.form textarea,.form button").forEach(function(e){e.disabled=!editable});
+  $("matricule").readOnly=true;
+  $("grade").disabled=true; // le grade vient de Discord, non modifiable
+  $("send").classList.toggle("hide",!editable);
+  $("send").textContent=isNew?"Envoyer le rapport":"Enregistrer (repasse en attente)";
+  $("reset").classList.toggle("hide",!editable);
+  $("del").classList.toggle("hide",!(isNew&&own)&&!(own&&cur.status!=="approved")&&!S.me.staff);
+  $("rv").classList.toggle("hide",!(S.me.staff&&!own&&!isNew));
+  $("agentBox").classList.toggle("hide",!own);
+  $("rvC").value="";
+  var t=tk(cur.user_id),who=own?"":"Rapport de "+(t?t.name:"?")+" · ";
+  var b=$("stat"),txt,cls="";
+  if(isNew){txt="📝 Brouillon : pas encore envoyé. Clique sur « Envoyer le rapport » pour le déposer dans ton ticket.";cls="wait"}
+  else if(cur.status==="approved"){txt="✅ Validé"+(cur.reviewer?" par "+cur.reviewer:"")+(cur.comment?" — "+cur.comment:"");cls="ok"}
+  else if(cur.status==="rejected"){txt="❌ Refusé"+(cur.reviewer?" par "+cur.reviewer:"")+(cur.comment?" — "+cur.comment:"")+(own?". Corrige puis enregistre pour le renvoyer.":"");cls="ko"}
+  else{txt="⏳ En attente de validation";cls="wait"}
+  b.textContent=who+txt;b.className=cls;
+}
+function newReport(){
+  function go(){
+    if(!draft){
+      var d=today(),c=reports.filter(function(r){return r.data.date===d}).length+1,data={};
+      fields.forEach(function(f){data[f]=DEF[f]});
+      data.agent="<@"+S.me.id+">";data.grade=S.me.grade||DEF.grade;data.date=d;data.num=String(c);data.matricule=S.ticket.matricule;data.rec=[];
+      draft={id:null,user_id:S.me.id,status:null,data:data};saveDraft();
+    }
+    selectReport(draft);
+  }
+  if(viewing!==S.me.id)loadReports(S.me.id).then(go).catch(fail);else go();
+}
+$("newRep").onclick=function(){if(S&&S.ticket)newReport()};
+
+/* ===== ACTIONS ===== */
+$("send").onclick=function(){
+  if(busy||!cur||!editable)return;
+  render();
+  var body={ref:curRef,text:$("out").textContent,data:snapshot()},wasNew=cur.id==null,id=cur.id;
+  busy=true;
+  (wasNew?api("POST","/api/reports",body):api("PUT","/api/reports/"+id,body))
+  .then(function(j){
+    if(wasNew){id=j.id;draft=null;clearDraft()}
+    return loadReports(S.me.id);
+  }).then(function(){
+    toast("Rapport envoyé ✓");
+    var r=reports.filter(function(q){return q.id===id})[0];
+    if(r)selectReport(r);else showFirst(false);
+    if(S.me.staff)loadTickets().catch(function(){});
+  }).catch(fail).then(function(){busy=false});
+};
+$("del").onclick=function(){
+  if(busy||!cur||!confirm("Supprimer ce rapport ?"))return;
+  if(cur.id==null){draft=null;clearDraft();cur=null;showFirst(false);return}
+  busy=true;
+  api("DELETE","/api/reports/"+cur.id).then(function(){return loadReports(viewing)}).then(function(){
+    cur=null;showFirst(false);
+    if(S.me.staff)loadTickets().catch(function(){});
+  }).catch(fail).then(function(){busy=false});
+};
+function review(st){
+  if(busy||!cur||cur.id==null)return;
+  var c=$("rvC").value.trim();
+  if(st==="rejected"&&!c){toast("Ajoute un commentaire pour expliquer le refus.");return}
+  var id=cur.id;busy=true;
+  api("POST","/api/reports/"+id+"/review",{status:st,comment:c})
+  .then(function(){return Promise.all([loadReports(viewing),loadTickets()])})
+  .then(function(){
+    toast(st==="approved"?"Rapport validé ✓":"Rapport refusé");
+    var r=reports.filter(function(q){return q.id===id})[0];
+    if(r)selectReport(r);else showFirst(false);
+  }).catch(fail).then(function(){busy=false});
+}
+$("rvOk").onclick=function(){review("approved")};
+$("rvKo").onclick=function(){review("rejected")};
+
+/* ===== MODALE MATRICULE ===== */
+function openModal(mode){
+  mmode=mode;
+  var t=mode==="edit"?tk(viewing):null;
+  $("mTitle").textContent=mode==="create"?"Crée ton ticket":"Modifier le matricule";
+  $("mHelp").textContent=mode==="create"?"Ces informations ne sont demandées qu’une seule fois : elles seront liées à ton ticket permanent.":"Ticket de "+(t?t.name:"?");
+  $("matOk").textContent=mode==="create"?"Créer mon ticket":"Enregistrer";
+  $("matNo").classList.toggle("hide",mode!=="edit");
+  $("newFields").classList.toggle("hide",mode==="edit");
+  $("matBox").classList.toggle("hide",mode==="complete");
+  if(mode==="complete"){$("mTitle").textContent="Complète ton ticket";$("mHelp").textContent="Il nous manque ton nom, prénom et ton UUID (demandés une seule fois).";$("matOk").textContent="Enregistrer"}
+  $("mat").value=t?t.matricule:"";$("matErr").textContent="";
+  $("modal").classList.add("on");if(mode!=="edit")$("fname").focus();else{$("mat").focus();$("mat").select()}
+}
+function closeModal(){$("modal").classList.remove("on")}
+$("mat").oninput=function(){this.value=this.value.replace(/\D/g,"");$("matErr").textContent=""};
+$("mat").onkeydown=function(e){if(e.key==="Enter")$("matOk").click();if(e.key==="Escape"&&mmode==="edit")closeModal()};
+$("matNo").onclick=closeModal;
+$("matOk").onclick=function(){
+  var v=$("mat").value.trim();
+  var fn=$("fname").value.trim().replace(/\s+/g," "),fu=$("fuuid").value.trim();
+  if(mmode!=="edit"){
+    if(fn.length<3||fn.indexOf(" ")<0){$("matErr").textContent=ERR.nom_invalide;return}
+    if(!/^[A-Za-z0-9_-]{1,64}$/.test(fu)){$("matErr").textContent=ERR.uuid_invalide;return}
+  }
+  if(mmode!=="complete"&&!/^\d{1,10}$/.test(v)){$("matErr").textContent=ERR.matricule_invalide;return}
+  if(busy)return;busy=true;
+  var p=mmode==="complete"
+    ?api("PUT","/api/ticket",{full_name:fn,uuid:fu}).then(function(j){S.ticket=j.ticket;persist();closeModal();enter()})
+    :mmode==="create"
+    ?api("POST","/api/ticket",{matricule:v,full_name:fn,uuid:fu}).then(function(j){S.ticket=j.ticket;persist();closeModal();enter()})
+    :api("PATCH","/api/tickets/"+encodeURIComponent(viewing),{matricule:v}).then(function(j){
+        if(viewing===S.me.id){S.ticket=j.ticket;persist()}
+        closeModal();return loadTickets().then(function(){
+          if(cur&&cur.user_id===S.me.id&&S.ticket)$("matricule").value=S.ticket.matricule;
+          paint();
+        });
+      });
+  p.catch(function(e){
+    if(e.code==="ticket_existe"){closeModal();resume();return}
+    $("matErr").textContent=emsg(e);
+  }).then(function(){busy=false});
+};
+$("delTk").onclick=function(){
+  var t=S&&S.me.staff?tk(viewing):null;
+  if(!t||busy)return;
+  if(!confirm("Supprimer le ticket de "+t.name+" (matricule "+t.matricule+") ?\nTous ses rapports seront supprimés définitivement."))return;
+  busy=true;
+  api("DELETE","/api/tickets/"+encodeURIComponent(t.user_id)).then(function(){
+    if(t.user_id===S.me.id){S.ticket=null;persist();clearDraft();return resume()}
+    return loadTickets().then(function(){enter()});
+  }).catch(fail).then(function(){busy=false});
+};
+$("editMat").onclick=function(){if(S&&S.me.staff&&tk(viewing))openModal("edit")};
+
+/* ===== RECRUES (construites sans innerHTML : pas d'injection) ===== */
+function addRec(name,time){
+  var r=document.createElement("div");r.className="rec";
+  var a=document.createElement("input");a.className="rn";a.placeholder="Rookie 01";a.value=name||"";
+  var b=document.createElement("input");b.className="rt";b.type="time";b.value=time||"";
+  var c=document.createElement("button");c.type="button";c.className="sec";c.title="Supprimer";c.textContent="×";
+  c.onclick=function(){r.remove();render()};
+  a.oninput=render;b.oninput=render;
+  [a,b,c].forEach(function(e){e.disabled=!editable;r.appendChild(e)});
+  $("recList").appendChild(r);
+}
+function recrues(){
+  return Array.prototype.map.call(document.querySelectorAll("#recList .rec"),function(r){
+    return {n:r.querySelector(".rn").value.trim(),t:r.querySelector(".rt").value};
+  }).filter(function(r){return r.n||r.t}).sort(function(a,b){return (a.t||"99").localeCompare(b.t||"99")});
+}
+
+/* ===== GÉNÉRATION DU RAPPORT ===== */
+function render(){
+  $("pauseBox").classList.toggle("hide",$("pause").value!=="oui");
+  $("recBox").classList.toggle("hide",$("recrut").value!=="oui");
+  var d=$("date").value?new Date($("date").value+"T12:00:00"):new Date();
+  var dd=String(d.getDate()).padStart(2,"0"),mm=String(d.getMonth()+1).padStart(2,"0"),yy=String(d.getFullYear());
+  var ref=curRef="SASP-"+dd+mm+yy.slice(2)+"-"+String(n("num")).padStart(3,"0");
+  var pause=$("pause").value==="oui";
+  var tot=span($("debut").value,$("fin").value),pz=pause?span($("pDebut").value,$("pFin").value):0;
+  var dur=tot===null?"À compléter":fmt(Math.max(0,tot-(pz||0)));
+  var agent=$("agent").value.trim()||"[agent]";
+  var o=[];
+  o.push(L1,"                  RAPPORT DE SERVICE — SASP",L1,"");
+  o.push("RÉFÉRENCE DOSSIER : "+ref,"DATE              : "+dd+"/"+mm+"/"+yy,"AGENT RESPONSABLE : "+agent,"MATRICULE         : "+($("matricule").value||"[matricule]"),"GRADE             : "+$("grade").value,"STATUT            : **Rapport de service**","");
+  o.push(L2,"01 // REGISTRE DE SERVICE",L2,"");
+  o.push("  "+h($("debut").value)+"  → Prise de service");
+  if(pause){o.push("  "+h($("pDebut").value)+"  → Mise en pause");o.push("  "+h($("pFin").value)+"  → Reprise de service")}
+  o.push("  "+h($("fin").value)+"  → Fin de service","","  Durée totale de service : "+dur,"");
+  o.push(L2,"02 // BILAN DES OPÉRATIONS ET DES SAISIES",L2,"");
+  o.push("  💵 Argent sale saisi        : "+x(n("sale"),1),"  💸 Montant des amendes      : "+x(n("amendes"),1),"  🔫 Armes perquisitionnées   : "+x(n("armes")),"  🌿 Drogues perquisitionnées : "+x(n("drogues")),"  💻 Objets illégaux          : "+x(n("objets")),"  🏦 Dépôt au coffre          : "+x(n("coffre"),1),"");
+  o.push(L2,"03 // ACTIVITÉ DU SERVICE",L2,"");
+  o.push("  🚔 Courses-poursuites : "+n("poursuites"),"  🏪 Supérettes         : "+n("superettes"),"  🏦 Braquages de banque : "+n("banques"),"");
+  var rec=recrues(),hasRec=$("recrut").value==="oui"&&rec.length>0;
+  o.push(L2,"04 // RECRUTEMENT ET SUIVI DES EFFECTIFS",L2,"");
+  if(hasRec){rec.forEach(function(r){o.push("  "+h(r.t)+"  → Arrivée de "+(r.n||"la recrue"))});o.push("","  Les arrivées sont enregistrées dans le suivi des effectifs.")}
+  else o.push("  Aucun recrutement effectué durant ce service.");
+  o.push("");
+  var notes=$("notes").value.trim();
+  if(notes){o.push(L2,"05 // JOURNAL DES INCIDENTS",L2,"",notes,"")}
+  o.push(L2,(notes?"06":"05")+" // COMPTE RENDU DU SERVICE",L2,"");
+  var p=[];
+  p.push("Je débute mon service à "+h($("debut").value)+" et me tiens disponible pour les différentes opérations du SASP.");
+  if(pause)p.push("À "+h($("pDebut").value)+", je mets mon service en pause. Je reprends à "+h($("pFin").value)+".");
+  var act=[];
+  if(n("poursuites"))act.push(plural(n("poursuites"),"course-poursuite","courses-poursuites"));
+  if(n("superettes"))act.push(plural(n("superettes"),"braquage de supérette","braquages de supérette"));
+  if(n("banques"))act.push(plural(n("banques"),"braquage de banque","braquages de banque"));
+  if(act.length)p.push("Durant le service, j’ai participé à "+act.join(", ").replace(/, ([^,]*)$/," et $1")+".");
+  if(hasRec)p.push("J’ai également effectué "+plural(rec.length,"recrutement","recrutements")+" : "+rec.map(function(r){return (r.n||"une recrue")+(r.t?" à "+h(r.t):"")}).join(", ")+".");
+  if(n("sale"))p.push("Un total de "+money(n("sale"))+" d’argent sale a été saisi"+(n("coffre")?" et "+money(n("coffre"))+" déposés au coffre":"")+".");
+  p.push("Je termine mon service à "+h($("fin").value)+".");
+  o.push(p.join("\n\n"),"");
+  o.push("Agent : "+agent,"","             « SERVIR — PROTÉGER — INTERVENIR »","","Merci d’avoir pris le temps de lire mon rapport.","Bonne journée à l’ensemble du personnel du SASP.");
+  $("out").textContent=o.join("\n");
+  if(cur){
+    if(editable){cur.data=snapshot();if(cur.id==null){saveDraft();renderTabs()}}
+    else if(cur.text)$("out").textContent=cur.text;
+  }
+  paintView($("out").textContent);
+}
+
+function paintView(text){
+  var v=$("view");if(!v)return;
+  var frag=document.createDocumentFragment();
+  String(text).split("\n").forEach(function(l){
+    var d=document.createElement("div");
+    if(/^[━]{8,}$/.test(l)){d.className="sep"}
+    else if(/^[═]{8,}$/.test(l)){d.className="sep dbl"}
+    else if(/^ {10,}\S/.test(l)){d.className="ln ctr";d.textContent=l.trim()}
+    else{d.className="ln";d.textContent=l}
+    frag.appendChild(d);
+  });
+  v.innerHTML="";v.appendChild(frag);
+}
+$("matricule").addEventListener("input",function(){this.value=this.value.replace(/\D/g,"")});
+fields.forEach(function(f){$(f).addEventListener("input",render);$(f).addEventListener("change",render)});
+$("addRec").onclick=function(){addRec();render()};
+$("copy").onclick=function(){
+  var t=$("out").textContent,b=$("copy");
+  function ok(){b.textContent="Copié ✓";setTimeout(function(){b.textContent="Copier"},1500)}
+  if(navigator.clipboard&&navigator.clipboard.writeText){navigator.clipboard.writeText(t).then(ok,fb)}else fb();
+  function fb(){var r=document.createRange();r.selectNodeContents($("view"));var s=getSelection();s.removeAllRanges();s.addRange(r);try{document.execCommand("copy");ok()}catch(e){}}
+};
+$("reset").onclick=function(){
+  if(!cur||!editable||!confirm("Réinitialiser ce rapport ? (le matricule, l’agent et le grade sont conservés)"))return;
+  var d=cur.data,k={agent:d.agent,grade:d.grade,date:d.date,num:d.num,matricule:d.matricule},nd={};
+  fields.forEach(function(f){nd[f]=k[f]!==undefined?k[f]:DEF[f]});nd.rec=[];cur.data=nd;selectReport(cur);
+};
+
+if(!$("date").value)$("date").value=today();
+try{var th=localStorage.getItem("sasp-theme");if(th)document.documentElement.setAttribute("data-theme",th)}catch(e){}
+function icon(){$("theme").textContent=document.documentElement.getAttribute("data-theme")==="light"?"🌙":"☀️"}
+$("theme").onclick=function(){var r=document.documentElement,t=r.getAttribute("data-theme")==="light"?"dark":"light";r.setAttribute("data-theme",t);try{localStorage.setItem("sasp-theme",t)}catch(e){}icon()};
+icon();
+render();
+
+/* ===== CONNEXION DISCORD + SESSION SERVEUR =====
+   Discord ne sert qu'à prouver l'identité : le serveur vérifie lui-même le rôle et le grade,
+   puis donne une session de 6 h. Le matricule est demandé une seule fois (création du ticket). */
+function enter(){
+  loadDraft();
+  document.body.classList.add("noreport");
+  var p=[loadReports(S.me.id)];
+  if(S.me.staff)p.push(loadTickets());
+  Promise.all(p).then(function(){viewing=S.me.id;showFirst(true);greetStaff()}).catch(fail);
+}
+function start(){
+  $("dcUser").textContent=S.me.name+" · "+(S.me.grade||"grade non détecté")+(S.me.staff?" · staff":"");
+  $("dcBtn").textContent="Déconnexion";
+  document.body.classList.toggle("staff",!!S.me.staff);
+  greeted=false;lastPend={};notifBtn();
+  if(!pollT)pollT=setInterval(refresh,POLL_MS);
+  unlock();
+  if(!S.ticket){document.body.classList.add("noreport");loadDraft();openModal("create");return}
+  if(!S.ticket.full_name||!S.ticket.uuid){loadDraft();document.body.classList.add("noreport");openModal("complete");return}
+  enter();
+}
+function resume(){
+  api("GET","/api/me").then(function(j){S.me=j.me;S.exp=j.exp;S.ticket=j.ticket;persist();start()})
+  .catch(function(e){if(S)endSession(emsg(e))});
+}
+function doLogin(token){
+  lock("Connexion…");
+  api("POST","/api/login",{token:token}).then(function(j){
+    S={session:j.session,exp:j.exp,me:j.me,ticket:j.ticket};persist();start();
+  }).catch(function(e){lock(emsg(e))});
+}
+function boot(){
+  var red=location.href.split("#")[0].split("?")[0];
+  $("dcBtn").onclick=function(){
+    if(S){api("POST","/api/logout").catch(function(){}).then(function(){endSession()});return}
+    var state=Math.random().toString(36).slice(2)+Math.random().toString(36).slice(2);
+    try{sessionStorage.setItem("dc-state",state)}catch(e){}
+    fetch("/api/config").then(function(r){return r.json()}).then(function(c){
+      location.href="https://discord.com/oauth2/authorize?response_type=token&client_id="+encodeURIComponent(c.clientId)+"&scope="+encodeURIComponent("identify guilds.members.read")+"&redirect_uri="+encodeURIComponent(red)+"&state="+state;
+    }).catch(function(){toast(ERR.reseau)});
+  };
+  lock("Connexion…");
+  var m=location.hash.match(/access_token=([^&]+)/);
+  if(m){
+    var st=(location.hash.match(/state=([^&]+)/)||[])[1],ok=false;
+    try{ok=!!st&&st===sessionStorage.getItem("dc-state");sessionStorage.removeItem("dc-state")}catch(e){}
+    history.replaceState(null,"",red);
+    if(ok)doLogin(m[1]);else lock("Connexion Discord invalide, réessaie.");
+    return;
+  }
+  var saved=null;try{saved=JSON.parse(sessionStorage.getItem(SK)||"null")}catch(e){}
+  if(saved&&saved.session&&saved.exp>Date.now()){S=saved;resume()}
+  else lock("Connecte-toi avec Discord pour accéder au site.");
+}
+boot();
+})();
+</script>
+</body>
+</html>
