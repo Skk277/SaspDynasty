@@ -88,22 +88,26 @@ input[readonly]{opacity:.75}
 #toast{display:none;position:fixed;left:50%;bottom:calc(20px + env(safe-area-inset-bottom,0px));transform:translateX(-50%);background:var(--tx);color:var(--bg);padding:10px 16px;border-radius:999px;font-size:13px;font-weight:500;z-index:60;max-width:90vw;text-align:center}
 @media(max-width:800px){#tks{display:flex;overflow-x:auto;max-height:none}#tks .tab{flex:none;min-width:180px}}
 
-/* ===== Onglet Code radio ===== */
-#radioPage{display:none;margin-top:16px}
+/* ===== Onglet Code radio (compact : tient dans l'écran) ===== */
+#radioPage{display:none;margin-top:16px;padding:14px 18px 16px}
 body.radio #radioPage{display:block}
 body.radio .wrap,body.radio #empty{display:none!important}
 body.radio #radioBtn{border-color:var(--ac);box-shadow:0 0 0 3px color-mix(in srgb,var(--ac) 16%,transparent)}
-#radioPage .tbl{overflow-x:auto;border:1px solid var(--bd);border-radius:14px;background:var(--in)}
-#radioPage table{width:100%;border-collapse:collapse;font-size:14px}
-#radioPage th{padding:10px 14px;text-align:left;font-size:11.5px;letter-spacing:.1em;text-transform:uppercase;color:var(--mut);border-bottom:1px solid var(--bd)}
-#radioPage td{padding:8px 14px;border-bottom:1px solid var(--bd);text-align:left}
+#radioPage h2{margin:12px 0 6px}
+#radioPage h2:first-of-type{margin-top:0}
+#radioPage .codes{display:grid;grid-template-columns:repeat(3,1fr);gap:10px 14px}
+#radioPage .tbl{border:1px solid var(--bd);border-radius:12px;background:var(--in);overflow:hidden}
+#radioPage table{width:100%;border-collapse:collapse;font-size:12.5px;line-height:1.35}
+#radioPage td{padding:4px 10px;border-bottom:1px solid var(--bd);vertical-align:top}
 #radioPage tr:last-child td{border-bottom:0}
-#radioPage td:first-child{white-space:nowrap;width:1%;font-weight:700;color:var(--ac);font:700 13.5px ui-monospace,Consolas,monospace}
-#radioPage .ex{margin:0 0 16px}
-#radioPage .ex b{display:block;font-size:14px;margin-bottom:6px}
-#radioPage .cmd{display:block;background:var(--in);border:1px solid var(--bd);border-radius:12px;padding:10px 14px;font:13px/1.5 ui-monospace,Consolas,monospace;overflow-wrap:anywhere}
-#radioPage .ok{display:block;margin-top:6px;font-size:13.5px;color:var(--mut)}
-#radioPage .ok em{font-style:normal;color:var(--tx);font-weight:600}
+#radioPage td.k{white-space:nowrap;width:1%;font:700 12px ui-monospace,Consolas,monospace;color:var(--ac)}
+#radioPage td.c{font:12px ui-monospace,Consolas,monospace;color:var(--mut)}
+#radioPage td.e{font-weight:600}
+#radioPage tr.hd td{font-size:10.5px;font-weight:700;letter-spacing:.1em;text-transform:uppercase;color:var(--mut)}
+#radioPage .fmt{font-size:12.5px;color:var(--mut);margin:0 0 6px}
+#radioPage .fmt code{font:12px ui-monospace,Consolas,monospace;color:var(--tx)}
+@media(max-width:1000px){#radioPage .codes{grid-template-columns:1fr 1fr}}
+@media(max-width:640px){#radioPage .codes{grid-template-columns:1fr}}
 </style>
 </head>
 <body class="locked">
@@ -121,75 +125,12 @@ body.radio #radioBtn{border-color:var(--ac);box-shadow:0 0 0 3px color-mix(in sr
 <main>
 <div id="radioPage" class="card">
   <h2>Code radio</h2>
-  <div class="tbl"><table>
-    <thead><tr><th>Code</th><th>Signification</th></tr></thead>
-    <tbody>
-      <tr><td>10-1</td><td>Début de patrouille</td></tr>
-      <tr><td>10-4</td><td>Affirmatif / Bien reçu</td></tr>
-      <tr><td>10-5</td><td>Négatif / Non</td></tr>
-      <tr><td>10-6</td><td>Pause courte (5 ou 10 min)</td></tr>
-      <tr><td>10-7</td><td>Fin de service</td></tr>
-      <tr><td>10-8</td><td>Prise de service</td></tr>
-      <tr><td>10-9</td><td>Répétez</td></tr>
-      <tr><td>10-10</td><td>Contrôle routier</td></tr>
-      <tr><td>10-16</td><td>Filature / Suivi</td></tr>
-      <tr><td>10-19</td><td>Retour poste de police</td></tr>
-      <tr><td>10-20</td><td>Position actuelle</td></tr>
-      <tr><td>10-21</td><td>En route vers le dernier…</td></tr>
-      <tr><td>10-23</td><td>Stand By / Attente</td></tr>
-      <tr><td>10-25</td><td>Relâcher l’otage</td></tr>
-      <tr><td>10-26</td><td>Relâcher le suspect</td></tr>
-      <tr><td>10-27</td><td>Suspect recherché</td></tr>
-      <tr><td>10-32</td><td>Prise d’otage</td></tr>
-      <tr><td>10-37</td><td>Cambriolage</td></tr>
-      <tr><td>10-38</td><td>Gofast</td></tr>
-      <tr><td>10-40</td><td>Braquage de supérette / banque</td></tr>
-      <tr><td>10-43</td><td>Début de poursuite</td></tr>
-      <tr><td>10-44</td><td>Fin de poursuite</td></tr>
-      <tr><td>10-51</td><td>Demande de dépanneuse / mécano</td></tr>
-      <tr><td>10-52</td><td>Demande d’ambulance / soin</td></tr>
-      <tr><td>10-56</td><td>Refus d’obtempérer</td></tr>
-      <tr><td>10-57</td><td>Véhicule suspect</td></tr>
-      <tr><td>10-58</td><td>Délit de fuite</td></tr>
-      <tr><td>10-60</td><td>Vente de drogue</td></tr>
-      <tr><td>10-61</td><td>Possession de drogue</td></tr>
-      <tr><td>10-80</td><td>Coup de feu</td></tr>
-      <tr><td>10-82</td><td>Échange de tir</td></tr>
-      <tr><td>10-98</td><td>Officier à terre</td></tr>
-      <tr><td>10-99</td><td>Officier en danger</td></tr>
-    </tbody>
-  </table></div>
-
+  <div class="codes"><div class="tbl"><table><tr><td class="k">10-1</td><td>Début de patrouille</td></tr><tr><td class="k">10-4</td><td>Affirmatif / Bien reçu</td></tr><tr><td class="k">10-5</td><td>Négatif / Non</td></tr><tr><td class="k">10-6</td><td>Pause courte (5 ou 10 min)</td></tr><tr><td class="k">10-7</td><td>Fin de service</td></tr><tr><td class="k">10-8</td><td>Prise de service</td></tr><tr><td class="k">10-9</td><td>Répétez</td></tr><tr><td class="k">10-10</td><td>Contrôle routier</td></tr><tr><td class="k">10-16</td><td>Filature / Suivi</td></tr><tr><td class="k">10-19</td><td>Retour poste de police</td></tr><tr><td class="k">10-20</td><td>Position actuelle</td></tr></table></div><div class="tbl"><table><tr><td class="k">10-21</td><td>En route vers le dernier…</td></tr><tr><td class="k">10-23</td><td>Stand By / Attente</td></tr><tr><td class="k">10-25</td><td>Relâcher l’otage</td></tr><tr><td class="k">10-26</td><td>Relâcher le suspect</td></tr><tr><td class="k">10-27</td><td>Suspect recherché</td></tr><tr><td class="k">10-32</td><td>Prise d’otage</td></tr><tr><td class="k">10-37</td><td>Cambriolage</td></tr><tr><td class="k">10-38</td><td>Gofast</td></tr><tr><td class="k">10-40</td><td>Braquage de supérette / banque</td></tr><tr><td class="k">10-43</td><td>Début de poursuite</td></tr><tr><td class="k">10-44</td><td>Fin de poursuite</td></tr></table></div><div class="tbl"><table><tr><td class="k">10-51</td><td>Demande de dépanneuse / mécano</td></tr><tr><td class="k">10-52</td><td>Demande d’ambulance / soin</td></tr><tr><td class="k">10-56</td><td>Refus d’obtempérer</td></tr><tr><td class="k">10-57</td><td>Véhicule suspect</td></tr><tr><td class="k">10-58</td><td>Délit de fuite</td></tr><tr><td class="k">10-60</td><td>Vente de drogue</td></tr><tr><td class="k">10-61</td><td>Possession de drogue</td></tr><tr><td class="k">10-80</td><td>Coup de feu</td></tr><tr><td class="k">10-82</td><td>Échange de tir</td></tr><tr><td class="k">10-98</td><td>Officier à terre</td></tr><tr><td class="k">10-99</td><td>Officier en danger</td></tr></table></div></div>
   <h2>Types de patrouilles</h2>
-  <div class="tbl"><table>
-    <thead><tr><th>Indicatif</th><th>Description</th></tr></thead>
-    <tbody>
-      <tr><td>Lincoln</td><td>Patrouille en solo (interdite pour tout le monde sauf avec autorisation)</td></tr>
-      <tr><td>Adam</td><td>Patrouille à deux (avoir un officier 1 au minimum)</td></tr>
-      <tr><td>Tengo</td><td>Patrouille à trois</td></tr>
-      <tr><td>Xray</td><td>Patrouille à quatre (interdite)</td></tr>
-      <tr><td>Henry</td><td>Patrouille en hélicoptère (utilisable uniquement par des membres de l’état-major)</td></tr>
-      <tr><td>Mary</td><td>Patrouille en moto (interdite sauf cas exceptionnel)</td></tr>
-      <tr><td>Océan</td><td>Patrouille en bateau « véhicule nautique » (exceptionnelle)</td></tr>
-    </tbody>
-  </table></div>
-
+  <div class="tbl"><table><tr><td class="k">Lincoln</td><td>Patrouille en solo (interdite pour tout le monde sauf avec autorisation)</td></tr><tr><td class="k">Adam</td><td>Patrouille à deux (avoir un officier 1 au minimum)</td></tr><tr><td class="k">Tengo</td><td>Patrouille à trois</td></tr><tr><td class="k">Xray</td><td>Patrouille à quatre (interdite)</td></tr><tr><td class="k">Henry</td><td>Patrouille en hélicoptère (utilisable uniquement par des membres de l’état-major)</td></tr><tr><td class="k">Mary</td><td>Patrouille en moto (interdite sauf cas exceptionnel)</td></tr><tr><td class="k">Océan</td><td>Patrouille en bateau « véhicule nautique » (exceptionnelle)</td></tr></table></div>
   <h2>Exemples de codes radio complets</h2>
-  <div class="ex"><b>Se rendre sur une supérette</b>
-    <code class="cmd">(lincoln/adam/tengo/xray) (matricule du plus haut gradé) 10-21 vers le dernier 10-40</code>
-    <span class="ok">Exemple complet : <em>Adam 09 10-21 vers le dernier 10-40</em></span></div>
-  <div class="ex"><b>Faire un retour PDP</b>
-    <code class="cmd">(lincoln/adam/tengo/xray) (matricule du plus haut gradé) 10-19 "raison → facultatif"</code>
-    <span class="ok">Exemple complet : <em>Adam 09 10-19 pour procédure</em></span></div>
-  <div class="ex"><b>Partir en patrouille</b>
-    <code class="cmd">(lincoln/adam/tengo/xray) (matricule du plus haut gradé) 10-1 secteur sud</code>
-    <span class="ok">Exemple complet : <em>Adam 09 10-1 secteur sud</em></span></div>
-  <div class="ex"><b>Partir en course-poursuite</b>
-    <code class="cmd">(lincoln/adam/tengo/xray) (matricule du plus haut gradé) 10-43 (description du véhicule poursuivi) (combien de personnes à l’intérieur)</code>
-    <span class="ok">Exemple complet : <em>Adam 09 10-43 d’une Issi Sport blanche occupée 2 fois</em></span></div>
-  <div class="ex"><b>Fin de course-poursuite</b>
-    <code class="cmd">(lincoln/adam/tengo/xray) (matricule du plus haut gradé) 10-44 (description du véhicule poursuivi)</code>
-    <span class="ok">Exemple complet : <em>Adam 09 10-44 de la Issi Sport blanche occupée 2 fois</em></span></div>
+  <p class="fmt">Format : <code>(lincoln/adam/tengo/xray) (matricule du plus haut gradé)</code> puis le code.</p>
+  <div class="tbl"><table><tr class="hd"><td>Situation</td><td>Code à ajouter</td><td>Exemple complet</td></tr><tr><td class="k">Se rendre sur une supérette</td><td class="c">10-21 vers le dernier 10-40</td><td class="e">Adam 09 10-21 vers le dernier 10-40</td></tr><tr><td class="k">Faire un retour PDP</td><td class="c">10-19 "raison → facultatif"</td><td class="e">Adam 09 10-19 pour procédure</td></tr><tr><td class="k">Partir en patrouille</td><td class="c">10-1 secteur sud</td><td class="e">Adam 09 10-1 secteur sud</td></tr><tr><td class="k">Partir en course-poursuite</td><td class="c">10-43 (description du véhicule poursuivi) (combien de personnes à l’intérieur)</td><td class="e">Adam 09 10-43 d’une Issi Sport blanche occupée 2 fois</td></tr><tr><td class="k">Fin de course-poursuite</td><td class="c">10-44 (description du véhicule poursuivi)</td><td class="e">Adam 09 10-44 de la Issi Sport blanche occupée 2 fois</td></tr></table></div>
 </div>
 <div id="empty" class="card"><span id="emptyTxt"></span></div>
 <div class="wrap">
