@@ -10,7 +10,7 @@
     "node": ">=18"
   },
   "dependencies": {
-    "better-sqlite3": "^13.0.3",
+   "@libsql/client": "^0.14.0",
     "express": "^4.21.0"
   }
 }
