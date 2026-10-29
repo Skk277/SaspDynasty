@@ -88,33 +88,46 @@ input[readonly]{opacity:.75}
 #toast{display:none;position:fixed;left:50%;bottom:calc(20px + env(safe-area-inset-bottom,0px));transform:translateX(-50%);background:var(--tx);color:var(--bg);padding:10px 16px;border-radius:999px;font-size:13px;font-weight:500;z-index:60;max-width:90vw;text-align:center}
 @media(max-width:800px){#tks{display:flex;overflow-x:auto;max-height:none}#tks .tab{flex:none;min-width:180px}}
 
-/* ===== Onglet Code radio (compact : tient dans l'écran) ===== */
-#radioPage{display:none;margin-top:16px;padding:14px 18px 16px}
-body.radio #radioPage{display:block}
+/* ===== Onglets d'informations (code radio, procédure, Miranda…) ===== */
+.ipage{display:none;margin-top:16px;padding:14px 18px 16px}
+.ipage.on{display:block}
 body.radio .wrap,body.radio #empty{display:none!important}
-body.radio #radioBtn{border-color:var(--ac);box-shadow:0 0 0 3px color-mix(in srgb,var(--ac) 16%,transparent)}
-#radioPage h2{margin:12px 0 6px}
-#radioPage h2:first-of-type{margin-top:0}
-#radioPage .codes{display:grid;grid-template-columns:repeat(3,1fr);gap:10px 14px}
-#radioPage .tbl{border:1px solid var(--bd);border-radius:12px;background:var(--in);overflow:hidden}
-#radioPage table{width:100%;border-collapse:collapse;font-size:12.5px;line-height:1.35}
-#radioPage td{padding:4px 10px;border-bottom:1px solid var(--bd);vertical-align:top}
-#radioPage tr:last-child td{border-bottom:0}
-#radioPage td.k{white-space:nowrap;width:1%;font:700 12px ui-monospace,Consolas,monospace;color:var(--ac)}
-#radioPage td.c{font:12px ui-monospace,Consolas,monospace;color:var(--mut)}
-#radioPage td.e{font-weight:600}
-#radioPage tr.hd td{font-size:10.5px;font-weight:700;letter-spacing:.1em;text-transform:uppercase;color:var(--mut)}
-#radioPage .fmt{font-size:12.5px;color:var(--mut);margin:0 0 6px}
-#radioPage .fmt code{font:12px ui-monospace,Consolas,monospace;color:var(--tx)}
-@media(max-width:1000px){#radioPage .codes{grid-template-columns:1fr 1fr}}
-@media(max-width:640px){#radioPage .codes{grid-template-columns:1fr}}
+.navb{font-size:13.5px;padding:9px 12px}
+.navb.on{border-color:var(--ac);box-shadow:0 0 0 3px color-mix(in srgb,var(--ac) 16%,transparent)}
+.ipage h2{margin:12px 0 6px}
+.ipage h2:first-of-type{margin-top:0}
+.ipage .codes{display:grid;grid-template-columns:repeat(3,1fr);gap:10px 14px}
+.ipage .tbl{border:1px solid var(--bd);border-radius:12px;background:var(--in);overflow:hidden}
+.ipage table{width:100%;border-collapse:collapse;font-size:12.5px;line-height:1.35}
+.ipage td{padding:4px 10px;border-bottom:1px solid var(--bd);vertical-align:top}
+.ipage tr:last-child td{border-bottom:0}
+.ipage td.k{white-space:nowrap;width:1%;font:700 12px ui-monospace,Consolas,monospace;color:var(--ac)}
+.ipage td.c{font:12px ui-monospace,Consolas,monospace;color:var(--mut)}
+.ipage td.e{font-weight:600}
+.ipage tr.hd td{font-size:10.5px;font-weight:700;letter-spacing:.1em;text-transform:uppercase;color:var(--mut)}
+.ipage .fmt{font-size:13px;color:var(--mut);margin:0 0 8px}
+.ipage .fmt code{font:12px ui-monospace,Consolas,monospace;color:var(--tx)}
+.ipage a{color:var(--ac);font-weight:600;text-decoration:none}
+.ipage a:hover{text-decoration:underline}
+.steps{display:grid;gap:8px;margin-bottom:10px}
+.step{display:flex;gap:12px;align-items:flex-start;padding:10px 14px;border:1px solid var(--bd);border-radius:12px;background:var(--in);font-size:14px;line-height:1.5}
+.step .n{flex:none;width:26px;height:26px;border-radius:50%;display:grid;place-items:center;font-weight:700;font-size:13px;background:linear-gradient(135deg,var(--ac),var(--ac2));color:var(--acx)}
+.step.imp{border-color:#f59e0b}
+.tag{display:inline-block;margin-left:6px;padding:1px 9px;border-radius:999px;background:#f59e0b;color:#1a1200;font-size:11.5px;font-weight:700;vertical-align:1px}
+.script{background:var(--in);border:1px solid var(--bd);border-left:3px solid var(--ac);border-radius:12px;padding:12px 16px;font-size:14px;line-height:1.55;margin-bottom:10px}
+.script p{margin:0 0 8px}.script p:last-child{margin:0}
+.warn{padding:10px 14px;border:1px solid #ef4444;border-radius:12px;background:color-mix(in srgb,#ef4444 10%,transparent);font-size:13.5px;line-height:1.5}
+@media(max-width:1000px){.ipage .codes{grid-template-columns:1fr 1fr}}
+@media(max-width:640px){.ipage .codes{grid-template-columns:1fr}}
 </style>
 </head>
 <body class="locked">
 <header class="top"><div class="badge">🚔</div><div><h1>Rapport de service SASP</h1><p>Remplis le formulaire, le rapport se génère en direct.</p></div><div id="dc"><span id="dcUser"></span><button type="button" id="dcBtn">Connexion Discord</button><button type="button" class="sec" id="theme" title="Thème">☀️</button></div></header>
 <div id="lock" class="card"><div class="ic">🔒</div><h2 style="justify-content:center;margin:12px 0 8px">Accès réservé</h2><p id="lockMsg" style="color:var(--mut);margin:0"></p></div>
 <div class="shell">
-<aside class="side card"><button type="button" class="sec" id="radioBtn">📻 Code radio</button>
+<aside class="side card"><button type="button" class="sec navb" data-p="radio">📻 Code radio</button>
+<button type="button" class="sec navb" data-p="arrest">🚔 Procédure d’arrestation</button>
+<button type="button" class="sec navb" data-p="miranda">⚖️ Droit Miranda</button>
 <button type="button" id="newRep">+ Nouveau rapport</button>
 <div class="staffonly"><h2>Tickets</h2><div id="tks"></div></div>
 <h2 id="repTitle">Mes rapports</h2>
@@ -123,7 +136,7 @@ body.radio #radioBtn{border-color:var(--ac);box-shadow:0 0 0 3px color-mix(in sr
 <button type="button" class="sec staffonly" id="notifBtn">🔔 Activer les notifications</button>
 <div id="tabs"></div></aside>
 <main>
-<div id="radioPage" class="card">
+<div id="page-radio" class="card ipage">
   <h2>Code radio</h2>
   <div class="codes"><div class="tbl"><table><tr><td class="k">10-1</td><td>Début de patrouille</td></tr><tr><td class="k">10-4</td><td>Affirmatif / Bien reçu</td></tr><tr><td class="k">10-5</td><td>Négatif / Non</td></tr><tr><td class="k">10-6</td><td>Pause courte (5 ou 10 min)</td></tr><tr><td class="k">10-7</td><td>Fin de service</td></tr><tr><td class="k">10-8</td><td>Prise de service</td></tr><tr><td class="k">10-9</td><td>Répétez</td></tr><tr><td class="k">10-10</td><td>Contrôle routier</td></tr><tr><td class="k">10-16</td><td>Filature / Suivi</td></tr><tr><td class="k">10-19</td><td>Retour poste de police</td></tr><tr><td class="k">10-20</td><td>Position actuelle</td></tr></table></div><div class="tbl"><table><tr><td class="k">10-21</td><td>En route vers le dernier…</td></tr><tr><td class="k">10-23</td><td>Stand By / Attente</td></tr><tr><td class="k">10-25</td><td>Relâcher l’otage</td></tr><tr><td class="k">10-26</td><td>Relâcher le suspect</td></tr><tr><td class="k">10-27</td><td>Suspect recherché</td></tr><tr><td class="k">10-32</td><td>Prise d’otage</td></tr><tr><td class="k">10-37</td><td>Cambriolage</td></tr><tr><td class="k">10-38</td><td>Gofast</td></tr><tr><td class="k">10-40</td><td>Braquage de supérette / banque</td></tr><tr><td class="k">10-43</td><td>Début de poursuite</td></tr><tr><td class="k">10-44</td><td>Fin de poursuite</td></tr></table></div><div class="tbl"><table><tr><td class="k">10-51</td><td>Demande de dépanneuse / mécano</td></tr><tr><td class="k">10-52</td><td>Demande d’ambulance / soin</td></tr><tr><td class="k">10-56</td><td>Refus d’obtempérer</td></tr><tr><td class="k">10-57</td><td>Véhicule suspect</td></tr><tr><td class="k">10-58</td><td>Délit de fuite</td></tr><tr><td class="k">10-60</td><td>Vente de drogue</td></tr><tr><td class="k">10-61</td><td>Possession de drogue</td></tr><tr><td class="k">10-80</td><td>Coup de feu</td></tr><tr><td class="k">10-82</td><td>Échange de tir</td></tr><tr><td class="k">10-98</td><td>Officier à terre</td></tr><tr><td class="k">10-99</td><td>Officier en danger</td></tr></table></div></div>
   <h2>Types de patrouilles</h2>
@@ -131,6 +144,39 @@ body.radio #radioBtn{border-color:var(--ac);box-shadow:0 0 0 3px color-mix(in sr
   <h2>Exemples de codes radio complets</h2>
   <p class="fmt">Format : <code>(lincoln/adam/tengo/xray) (matricule du plus haut gradé)</code> puis le code.</p>
   <div class="tbl"><table><tr class="hd"><td>Situation</td><td>Code à ajouter</td><td>Exemple complet</td></tr><tr><td class="k">Se rendre sur une supérette</td><td class="c">10-21 vers le dernier 10-40</td><td class="e">Adam 09 10-21 vers le dernier 10-40</td></tr><tr><td class="k">Faire un retour PDP</td><td class="c">10-19 "raison → facultatif"</td><td class="e">Adam 09 10-19 pour procédure</td></tr><tr><td class="k">Partir en patrouille</td><td class="c">10-1 secteur sud</td><td class="e">Adam 09 10-1 secteur sud</td></tr><tr><td class="k">Partir en course-poursuite</td><td class="c">10-43 (description du véhicule poursuivi) (combien de personnes à l’intérieur)</td><td class="e">Adam 09 10-43 d’une Issi Sport blanche occupée 2 fois</td></tr><tr><td class="k">Fin de course-poursuite</td><td class="c">10-44 (description du véhicule poursuivi)</td><td class="e">Adam 09 10-44 de la Issi Sport blanche occupée 2 fois</td></tr></table></div>
+</div>
+<div id="page-arrest" class="card ipage">
+  <h2>Procédure d’arrestation</h2>
+  <p class="fmt">Comment réaliser une arrestation parfaite, sans vice de procédure.</p>
+  <div class="steps">
+    <div class="step"><span class="n">1</span><div>Interpellez l’individu, ou tazez-le si nécessaire (<b>toujours après 3 sommations</b>).</div></div>
+    <div class="step"><span class="n">2</span><div>Emmenez le suspect contre la voiture et fouillez-le. Saisissez tout objet illégal (les armes légales, achetées à l’armurerie, sont considérées comme illégales si le suspect les a utilisées pour commettre un acte illégal).</div></div>
+    <div class="step"><span class="n">3</span><div>Dites au suspect : <i>« Monsieur [Nom/Prénom], vous êtes placé en état d’arrestation. »</i></div></div>
+    <div class="step"><span class="n">4</span><div>Menottez le suspect, escortez-le, puis placez-le dans le véhicule pour l’emmener au poste de police.</div></div>
+    <div class="step imp"><span class="n">5</span><div>Énoncez les <a href="#" data-go="miranda">droits Miranda</a> une fois arrivé au poste.<span class="tag">Primordial</span></div></div>
+    <div class="step"><span class="n">6</span><div>Emmenez-le dans la salle « Police Records », faites une photo de lui torse nu et rédigez son <a href="#" data-go="miranda">Droit Miranda</a>.</div></div>
+    <div class="step"><span class="n">7</span><div>Emmenez le suspect dans les prisons, puis mettez-le en prison avec le menu <b>F6</b> (il faut qu’il soit menotté).</div></div>
+  </div>
+</div>
+<div id="page-miranda" class="card ipage">
+  <h2>Droit Miranda</h2>
+  <p class="fmt">Les « Droits Miranda » sont une obligation légale pour tout agent.</p>
+  <div class="steps">
+    <div class="step"><span class="n">1</span><div>À chaque interpellation, vous devez prononcer la phrase : <b>« Vous êtes en état d’arrestation pour le motif XX ».</b></div></div>
+    <div class="step"><span class="n">2</span><div>Après avoir procédé à l’interpellation de l’individu, vous devez dire ceci :</div></div>
+  </div>
+  <div class="script" id="mirText">
+    <p>[Nom/Prénom], nous sommes le [Jour/Mois/Année], il est actuellement [Heure/Minutes],</p>
+    <p>Vous êtes placé en état d’arrestation pour le(s) fait(s) suivant(s) : [faits reprochés à cette personne]</p>
+    <p>Vous avez le droit de garder le silence, si vous renoncez à ce droit, tout ce que vous direz pourra être et sera utilisé contre vous devant une cour de justice.</p>
+    <p>Vous avez le droit à un avocat, si vous n’en avez pas les moyens un avocat vous sera fourni d’office.</p>
+    <p>Vous avez également le droit à des soins ou des vivres si nécessaire.</p>
+    <p>Avez-vous bien compris vos droits ?</p>
+    <p>Souhaitez-vous en faire usage ?</p>
+  </div>
+  <div class="bar"><button type="button" class="sec" id="copyMir">Copier le texte</button></div>
+  <p class="fmt">Vous pouvez répéter les Droits Miranda 3 fois maximum.</p>
+  <div class="warn">⚠️ <b>ATTENTION</b> : ne pas dire les Droits Miranda représente un <b>vice de procédure</b>. Cela signifie que l’interpellation n’est pas valide, et vous vous exposez à des sanctions.</div>
 </div>
 <div id="empty" class="card"><span id="emptyTxt"></span></div>
 <div class="wrap">
@@ -251,11 +297,32 @@ var cur=null;          // rapport affiché (brouillon ou rapport serveur)
 var draft=null;        // brouillon local (pas encore envoyé)
 var editable=true, busy=false, curRef="", mmode="create";
 
-/* ===== ONGLET CODE RADIO ===== */
-function leaveRadio(){document.body.classList.remove("radio")}
-$("radioBtn").onclick=function(){
-  document.body.classList.toggle("radio");
-  if(document.body.classList.contains("radio"))window.scrollTo(0,0);
+/* ===== ONGLETS D'INFORMATIONS (code radio, procédure, Miranda…) ===== */
+function leaveRadio(){
+  document.body.classList.remove("radio");
+  document.querySelectorAll(".ipage.on,.navb.on").forEach(function(e){e.classList.remove("on")});
+}
+function openPage(p){
+  var b=document.querySelector('.navb[data-p="'+p+'"]'),pg=$("page-"+p);
+  if(!b||!pg)return;
+  leaveRadio();
+  b.classList.add("on");pg.classList.add("on");
+  document.body.classList.add("radio");window.scrollTo(0,0);
+}
+document.querySelectorAll(".navb").forEach(function(b){
+  b.onclick=function(){
+    if(b.classList.contains("on"))leaveRadio();else openPage(b.getAttribute("data-p"));
+  };
+});
+document.addEventListener("click",function(e){
+  var g=e.target.closest&&e.target.closest("[data-go]");
+  if(g){e.preventDefault();openPage(g.getAttribute("data-go"))}
+});
+$("copyMir").onclick=function(){
+  var t=Array.prototype.map.call($("mirText").querySelectorAll("p"),function(p){return p.textContent}).join("\n"),b=$("copyMir");
+  function ok(){b.textContent="Copié ✓";setTimeout(function(){b.textContent="Copier le texte"},1500)}
+  function fb(){var r=document.createRange();r.selectNodeContents($("mirText"));var s=getSelection();s.removeAllRanges();s.addRange(r);try{document.execCommand("copy");ok()}catch(e){}}
+  if(navigator.clipboard&&navigator.clipboard.writeText){navigator.clipboard.writeText(t).then(ok,fb)}else fb();
 };
 
 /* ===== OUTILS ===== */
